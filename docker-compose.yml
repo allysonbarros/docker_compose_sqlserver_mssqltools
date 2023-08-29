@@ -2,6 +2,8 @@ services:
   sqlserver:
     platform: linux/amd64
     image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - ./backups:/tmp/backups
     environment:
       SA_PASSWORD: "SqlServer2022!"
       ACCEPT_EULA: "Y"
@@ -14,5 +16,5 @@ services:
     depends_on:
       - sqlserver
     volumes:
-      - ./backups:/tmp/backups
-    command: /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P SqlServer2022! -d pgd_web -i /tmp/backups/PGCADE_FULL_20230519_000338.bak
+      - ./scripts:/tmp/scripts
+    command: /bin/bash /tmp/scripts/restore.sh
