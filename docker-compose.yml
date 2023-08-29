@@ -1,6 +1,5 @@
 services:
   sqlserver:
-    platform: linux/amd64
     image: mcr.microsoft.com/mssql/server:2022-latest
     volumes:
       - ./backups:/tmp/backups
@@ -9,12 +8,3 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
-      
-  mssqltools:
-    image: mcr.microsoft.com/mssql-tools
-    platform: linux/amd64
-    depends_on:
-      - sqlserver
-    volumes:
-      - ./scripts:/tmp/scripts
-    command: /bin/bash /tmp/scripts/restore.sh
