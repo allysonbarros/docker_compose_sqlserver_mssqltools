@@ -1,0 +1,20 @@
+services:
+  sqlserver:
+    platform: linux/amd64
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "SqlServer2022!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+      
+  mssqltools:
+    image: mcr.microsoft.com/mssql-tools
+    platform: linux/amd64
+    depends_on:
+      - sqlserver
+    environment:
+      - BACKUP_FILE=PGCADE_FULL_20230519_000338.bak
+    volumes:
+      - ./backups:/tmp/backups
+    command: /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P SqlServer2022! -d pgd_web -i /tmp/backups/${BACKUP_FILE}
